@@ -2,10 +2,11 @@ package main
 
 import (
 	"log"
-	"sql-test/internal/domain/model"
+	"sql-test/internal/delivery/http"
 	"sql-test/internal/repository"
 	"sql-test/internal/usecase"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -18,13 +19,11 @@ func main() {
 		log.Print("db connect error: ", err)
 	}
 
+	router := gin.Default()
+
 	repo := repository.NewMysqlUserRepo(db)
 	usecase := usecase.NewUserUsecase(repo)
+	http.BindHttpHandler(router, usecase)
 
-	user := model.User{
-		UserId: "test01",
-		Name:   "測試使用者",
-		Email:  "test@email.com",
-	}
-	usecase.UserRegister(&user)
+	router.Run(":8080")
 }

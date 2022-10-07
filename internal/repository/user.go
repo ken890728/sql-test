@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"log"
 	"sql-test/internal/domain/model"
 	"sql-test/internal/domain/repository"
 
@@ -19,6 +20,7 @@ func NewMysqlUserRepo(DB *gorm.DB) repository.UserRepo {
 func (userRepo *mysqlUserRepo) Create(user *model.User) error {
 	err := userRepo.DB.Save(&user).Error
 	if err != nil {
+		log.Print("Repository error:", err)
 		return err
 	}
 	return nil
@@ -27,6 +29,7 @@ func (userRepo *mysqlUserRepo) Create(user *model.User) error {
 func (userRepo *mysqlUserRepo) Delete(ID int) error {
 	err := userRepo.DB.Delete(&model.User{}, ID).Error
 	if err != nil {
+		log.Print("Repository error:", err)
 		return err
 	}
 	return nil

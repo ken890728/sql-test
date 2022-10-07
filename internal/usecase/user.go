@@ -15,6 +15,15 @@ func NewUserUsecase(repo repository.UserRepo) usecase.UserUsecase {
 }
 
 func (userUsecase *userUsecase) UserRegister(user *model.User) error {
-	userUsecase.repo.Create(user)
+	user.HashPassword()
+	err := userUsecase.repo.Create(user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (userUsecase *userUsecase) UserDelete(ID int) error {
+	userUsecase.repo.Delete(ID)
 	return nil
 }
