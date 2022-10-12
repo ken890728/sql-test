@@ -17,3 +17,11 @@ func (user *User) HashPassword() {
 	hashByte, _ := bcrypt.GenerateFromPassword([]byte(user.Passwd), 8)
 	user.Passwd = string(hashByte)
 }
+
+func (user *User) VerifyPasswd(inputPasswd string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(user.Passwd), []byte(inputPasswd))
+	if err != nil {
+		return err
+	}
+	return nil
+}

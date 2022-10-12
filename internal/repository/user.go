@@ -34,3 +34,9 @@ func (userRepo *mysqlUserRepo) Delete(ID int) error {
 	}
 	return nil
 }
+
+func (userRepo *mysqlUserRepo) GetByUserId(userId string) (model.User, error) {
+	var userData model.User
+	err := userRepo.DB.Where(&model.User{UserId: userId}).First(&userData).Error
+	return userData, err
+}
