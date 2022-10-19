@@ -9,4 +9,6 @@ type UserUsecase interface {
 	UserDelete(ID int) error
 	UserLogin(userId string, passwd string) (JwtToken, error)
 	UserData(userId string) (model.User, error)
+	UserAddBook(userId string, book *model.Book) error
+	UserGetBooks(userId string, cmpBookData *model.Book) ([]model.Book, error)
 }

@@ -56,3 +56,24 @@ func (userUsecase *userUsecase) UserData(userId string) (model.User, error) {
 	}
 	return userData, nil
 }
+
+func (userUsecase *userUsecase) UserAddBook(userId string, book *model.Book) error {
+	userData, err := userUsecase.repo.GetByUserId(userId)
+	if err != nil {
+		return nil
+	}
+	book.Users = append(book.Users, userData)
+	err = userUsecase.bookRepo.Create(book)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (userUsecase *userUsecase) UserGetBooks(userId string, cmpBookData *model.Book) ([]model.Book, error) {
+	bookData, err := userUsecase.bookRepo.GetByUserId(userId, cmpBookData)
+	if err != nil {
+		return bookData, err
+	}
+	return bookData, nil
+}

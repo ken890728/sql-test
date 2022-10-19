@@ -33,3 +33,32 @@ type UserDataResponse struct {
 	Name         string `json:"name,omitempty"`
 	Email        string `json:"email,omitempty"`
 }
+
+type UserAddBookRequest struct {
+	Isbn   string `json:"isbn"`
+	Title  string `json:"title"`
+	Author string `json:"author"`
+}
+
+type UserAddBookResponse struct {
+	Status       int    `json:"status"`
+	ErrorMessage string `json:"error_message,omitempty"`
+}
+
+type UserGetBooksRequest struct {
+	Isbn   string `json:"isbn,omitempty"`
+	Title  string `json:"title,omitempty"`
+	Author string `json:"author,omitempty"`
+}
+
+type BookResponse struct {
+	Isbn   string `json:"isbn"`
+	Title  string `json:"title"`
+	Author string `json:"author"`
+}
+
+type UserGetBooksResponse struct {
+	Status       int            `json:"status"`
+	ErrorMessage string         `json:"error_message,omitempty"`
+	Books        []BookResponse `json:"books"`
+}

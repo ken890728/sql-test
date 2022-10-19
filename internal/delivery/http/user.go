@@ -86,3 +86,80 @@ func (delivery *httpDelivery) UserData(context *gin.Context) {
 	response.Name = userData.Name
 	context.JSON(200, response)
 }
+
+func (delivery *httpDelivery) UserAddBook(context *gin.Context) {
+	var request http.UserAddBookRequest
+	var response http.UserAddBookResponse
+
+	userId := context.GetString("user_id")
+
+	if err := context.ShouldBindJSON(&request); err != nil {
+		log.Print("/book api bind json error:", err)
+		response.Status = -1
+		response.ErrorMessage = "/book api bind json error"
+		context.JSON(400, response)
+		return
+	}
+
+	bookData := model.Book{
+		Isbn:   request.Isbn,
+		Title:  request.Title,
+		Author: request.Author,
+	}
+
+	err := delivery.UserUsecase.UserAddBook(userId, &bookData)
+
+	if err != nil {
+		log.Print("/book add book error:", err)
+		response.Status = -1
+		response.ErrorMessage = "add book error"
+		context.JSON(400, response)
+		return
+	}
+
+	response.Status = 0
+	context.JSON(200, response)
+}
+
+func (delivery *httpDelivery) UserGetBooks(context *gin.Context) {
+	var request http.UserGetBooksRequest
+	var response http.UserGetBooksResponse
+	var booksResponse []http.BookResponse
+
+	userId := context.GetString("user_id")
+
+	if err := context.ShouldBindJSON(&request); err != nil {
+		log.Print("/book api bind json error:", err)
+		response.Status = -1
+		response.ErrorMessage = "/book api bind json error"
+		context.JSON(400, response)
+		return
+	}
+
+	cmpBookData := model.Book{
+		Isbn:   request.Isbn,
+		Title:  request.Title,
+		Author: request.Author,
+	}
+	booksData, err := delivery.UserUsecase.UserGetBooks(userId, &cmpBookData)
+
+	if err != nil {
+		log.Print("/book get books error:", err)
+		response.Status = -1
+		response.ErrorMessage = "get books error"
+		context.JSON(400, response)
+		return
+	}
+
+	for _, bookData := range booksData {
+		booksResponse = append(booksResponse, http.BookResponse{
+			Isbn:   bookData.Isbn,
+			Title:  bookData.Title,
+			Author: bookData.Author,
+		})
+	}
+
+	response.Status = 0
+	response.Books = booksResponse
+	context.JSON(200, response)
+}

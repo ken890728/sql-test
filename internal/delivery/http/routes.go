@@ -27,6 +27,8 @@ func BindHttpHandler(ginHandler *gin.Engine, userUsecase usecase.UserUsecase) {
 			userHandler.POST("/register", delivery.UserRegister)
 			userHandler.POST("/login", delivery.UserLogin)
 			userHandler.GET("/data", JwtCheckMiddleware(), delivery.UserData)
+			userHandler.POST("/book", JwtCheckMiddleware(), delivery.UserAddBook)
+			userHandler.GET("/book", JwtCheckMiddleware(), delivery.UserGetBooks)
 		}
 	}
 }

@@ -26,9 +26,20 @@ func (bookRepo *mysqlBookRepo) Create(book *model.Book) error {
 	return nil
 }
 
-func (bookRepo *mysqlBookRepo) GetByUserId(userId string) ([]model.Book, error) {
+func (bookRepo *mysqlBookRepo) GetByUserId(userId string, cmpBookData *model.Book) ([]model.Book, error) {
 	var Books []model.Book
 	user := model.User{UserId: userId}
-	err := bookRepo.DB.Where(&model.Book{Users: []model.User{user}}).Find(&Books).Error
+	//err := bookRepo.DB.Where(&model.Book{Users: []model.User{user}}).Find(&Books).Error
+	dborm := bookRepo.DB.Where(&model.Book{Users: []model.User{user}})
+	if cmpBookData.Isbn != "" {
+		dborm = dborm.Where("isbn = ?", cmpBookData.Isbn)
+	}
+	if cmpBookData.Title != "" {
+		dborm = dborm.Where("title LIKE ?", "%"+cmpBookData.Title+"%")
+	}
+	if cmpBookData.Author != "" {
+		dborm = dborm.Where("author LIKE ?", "%"+cmpBookData.Author+"%")
+	}
+	err := dborm.Find(&Books).Error
 	return Books, err
 }
