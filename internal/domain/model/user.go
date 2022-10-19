@@ -11,6 +11,7 @@ type User struct {
 	Name   string
 	Email  string
 	Passwd string
+	Books  []Book `gorm:"many2many:users_books"`
 }
 
 func (user *User) HashPassword() {

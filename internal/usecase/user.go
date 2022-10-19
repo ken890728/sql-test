@@ -8,11 +8,15 @@ import (
 )
 
 type userUsecase struct {
-	repo repository.UserRepo
+	repo     repository.UserRepo
+	bookRepo repository.BookRepo
 }
 
-func NewUserUsecase(repo repository.UserRepo) usecase.UserUsecase {
-	return &userUsecase{repo: repo}
+func NewUserUsecase(repo repository.UserRepo, bookRepo repository.BookRepo) usecase.UserUsecase {
+	return &userUsecase{
+		repo:     repo,
+		bookRepo: bookRepo,
+	}
 }
 
 func (userUsecase *userUsecase) UserRegister(user *model.User) error {
